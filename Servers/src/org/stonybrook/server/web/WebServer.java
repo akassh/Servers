@@ -6,35 +6,15 @@ import java.util.concurrent.*;
 
 public class WebServer implements Server 
 {
-	public static void main(String[] args) 
+	public static void main(String[] args) throws IOException 
 	{
 		System.out.println("!!!!!SERVER STARTED!!!!!");
-		ServerSocket svr = null;
-		try 
+		ServerSocket svr = new ServerSocket(SERVER_PORT);
+		ExecutorService clients = Executors.newFixedThreadPool(NUMBER_OF_CLIENTS);
+		while(true)
 		{
-			svr = new ServerSocket(SERVER_PORT);
-			ExecutorService clients = Executors.newFixedThreadPool(NUMBER_OF_CLIENTS);
-			while(true)
-			{
-				Socket connectionSocket = svr.accept();
-				clients.submit(new ClientInstance(connectionSocket));
-			}
-		} 
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			try 
-			{
-				svr.close();
-			} 
-			catch (IOException e) 
-			{
-				System.out.println("Server Socket Closing Error!!!");
-				e.printStackTrace();
-			}
+			Socket connectionSocket = svr.accept();
+			clients.submit(new ClientInstance(connectionSocket));
 		}
 	}	
 }

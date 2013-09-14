@@ -40,51 +40,22 @@ class ClientInstance implements Server, Callable<String>
 		return null;
 	}
 	
-	private void sendFile(String filename)
+	private void sendFile(String filename) throws IOException
 	{
-		BufferedWriter bw = null;
-		BufferedReader br = null;
-		try 
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(connectionSocket.getOutputStream()));
+		if(!(new File(filename).exists()))
 		{
-			bw = new BufferedWriter(new OutputStreamWriter(connectionSocket.getOutputStream()));
-			br = new BufferedReader(new FileReader(new File(filename)));
-			String temp = null;
-			while((temp = br.readLine())!=null)
-			{
-				bw.write(temp + "\n");
-			}
+			bw.write(ERROR_404 + "\n");
+			bw.close();
+			return;
+		}
+		BufferedReader br = new BufferedReader(new FileReader(new File(filename)));
+		String temp = null;
+		while((temp = br.readLine())!=null)
+		{
+			bw.write(temp + "\n");
 		} 
-		catch (FileNotFoundException e) 
-		{
-			try 
-			{
-				bw.write(ERROR_404);
-			} 
-			catch (IOException e1) 
-			{
-				System.out.println("HTTP SEND ERROR!!!");
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
-		}
-		catch(IOException e)
-		{
-			System.out.println("HTTP SEND ERROR!!!");
-			e.printStackTrace();
-		}
-		finally
-		{
-			try 
-			{
-				bw.close();
-				br.close();
-			} 
-			catch (IOException e) 
-			{
-				System.out.println("Error Occured While closing the html files");
-				e.printStackTrace();
-			}
-			
-		}
+		bw.close();
+		br.close();
 	}
 }

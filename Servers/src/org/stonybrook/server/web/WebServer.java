@@ -22,7 +22,6 @@ public class WebServer implements Server
 		} 
 		catch (IOException e) 
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally

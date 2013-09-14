@@ -6,6 +6,7 @@ import java.util.concurrent.*;
 
 public class WebServer implements Server 
 {
+	@SuppressWarnings("resource")
 	public static void main(String[] args) throws IOException 
 	{
 		System.out.println("!!!!!SERVER STARTED!!!!!");
